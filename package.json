@@ -1,0 +1,23 @@
+{
+  "name": "nadeko-addons",
+  "version": "1.0.0",
+  "description": "addons to the my selfhosted version of Nadeko",
+  "main": "nadeko-sideload.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node nadeko-sideload.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jennasisis/nadeko-addons.git"
+  },
+  "author": "jennasisis",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jennasisis/nadeko-addons/issues"
+  },
+  "homepage": "https://github.com/jennasisis/nadeko-addons#readme",
+  "dependencies": {
+    "discord.js": "^11.3.2"
+  }
+}
