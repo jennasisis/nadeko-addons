@@ -58,6 +58,11 @@ client.on('message', message => {
   if(message.author.bot) return;
   const args = message.content.split(" ").slice(1);
 
+  // Guild restricted commands
+  if(message.guild.id === usGuild){
+    if(message.channel.id == usChnl && message.attachments) return message.delete();
+  }
+
   // roles and stuff
   var scrungoRole = message.guild.roles.find('name', 'Scrungo');
   var clubRole = message.guild.roles.find('name', 'Club Members');
