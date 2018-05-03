@@ -4,8 +4,6 @@ const client = new Discord.Client({disableEveryone: true});
 var akiiID = '107599228900999168';
 const config = require('./config.json');
 
-// change to update git, ignore this
-
 // debug capability
 var debug = false;
 
