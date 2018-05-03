@@ -5,26 +5,20 @@ var akiiID = '107599228900999168';
 const config = require('./config.json');
 
 // debug capability
-var debug = true;
+var debug = false;
 
-var usChnl = '396746152168652810',          // #mod_logs: Visual Novel Center
-    usGuild = '389486485155479563',         // Visual Novel Center
-    usMediaChnl = '436877775224307713',     // #media: Visual Novel Center
-    sMonitChnl = '430472413042704386',      // #type-here
-    token = config.token,                   // Nadeko's token
-    webhookToken = config.webhooks.token,   // Visual Novel Center's universal webhook token
-    webhookID = config.webhooks.id          // Visual Novel Center's universal webhook ID
+var usChnl = '396746152168652810',                    // #mod_logs: Visual Novel Center
+    usGuild = '389486485155479563',                   // Visual Novel Center
+    usMediaChnl = '436877775224307713',               // #media: Visual Novel Center
+    sMonitChnl = '430472413042704386',                // #type-here
+    token = config.token                              // Nadeko's token
 
 if(debug){
-  usChnl = '332632603737849856';            // #general: Some bot shit or somethin idk
-  usMediaChnl = '332632603737849856';       // #general: Some bot shit or somethin idk
-  usGuild = '332632603737849856';           // Some bot shit or somethin idk
-  token = config.devToken;                  // Debug Bot's token
-  webhookToken = config.webhooks.devToken;  // Some bot shit or somethin idk's universal webhook token
-  webhookID = config.webhooks.devID;        // Some bot shit or somethin idk's universal webhook ID
+  usChnl = '332632603737849856';                      // #general: Some bot shit or somethin idk
+  usMediaChnl = '332632603737849856';                 // #general: Some bot shit or somethin idk
+  usGuild = '332632603737849856';                     // Some bot shit or somethin idk
+  token = config.devToken;                            // Debug Bot's token
 }
-
-const hook = new Discord.WebhookClient(webhookID, webhookToken);
 
 function clean(text) {
   if (typeof(text) === "string")
@@ -63,18 +57,14 @@ client.on('ready', async () => {
   if(debug) console.log('⚠️  DEBUG FUNCTION ENABLED ️️️⚠️');
 });
 
-client.on('message', message => {
+client.on('message', async message => {
   if(message.author.bot) return;
   const args = message.content.split(" ").slice(1);
-
-  // Guild restricted commands
   
   if(message.guild.id === usGuild) {
-    if(message.channel.id !== usMediaChnl && message.attachments) {
+    if(message.attachments.map(g => g.id)[0]){
+      if(message.channel.id === usMediaChnl) return;
       message.delete();
-      if(message.content){
-        
-      }
     }
   }
 
@@ -120,7 +110,7 @@ client.on('message', message => {
   }
 
   // ping
-  if(message.content === "+sPing") return message.channel.send(`:ping_pong: Nadeko Sideloader: ${Math.round(client.ping)}ms`);
+  if(message.content === "+sPing") return message.channel.send(`:ping_pong: Nadeko Addons: ${Math.round(client.ping)}ms`);
 
   // debug
   if(message.content === "+debug?") return message.channel.send(`\`\`\`xl\n${debug}\n\`\`\``);
