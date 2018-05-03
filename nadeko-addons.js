@@ -5,19 +5,22 @@ var akiiID = '107599228900999168';
 const config = require('./config.json');
 
 // debug capability
-var debug = false;
+var debug = true;
 
 var usChnl = '396746152168652810',                    // #mod_logs: Visual Novel Center
     usGuild = '389486485155479563',                   // Visual Novel Center
     usMediaChnl = '436877775224307713',               // #media: Visual Novel Center
     sMonitChnl = '430472413042704386',                // #type-here
-    token = config.token                              // Nadeko's token
+    token = config.token,                             // Nadeko's token
+    errorChnl = '389524577178353674'                  // #best_staff_2020: VNC
 
 if(debug){
   usChnl = '332632603737849856';                      // #general: Some bot shit or somethin idk
   usMediaChnl = '332632603737849856';                 // #general: Some bot shit or somethin idk
   usGuild = '332632603737849856';                     // Some bot shit or somethin idk
+  sMonitChnl = '436989848658771973';                  // #testing: Some bot shit or somethin idk
   token = config.devToken;                            // Debug Bot's token
+  errorChnl = '332632603737849856';                   // #general: SBSOSIDK
 }
 
 function clean(text) {
@@ -58,6 +61,7 @@ client.on('ready', async () => {
 });
 
 client.on('message', async message => {
+try { // HAHAHAHAHAHA SHIT
   if(message.author.bot) return;
   const args = message.content.split(" ").slice(1);
   
@@ -126,6 +130,7 @@ client.on('message', async message => {
       await client.channels.get(usChnl).send(`:gear: **\`${message.author.tag}\` | Removed Scrungo role**`);
     }, 2.592e+8);
   }
+} catch (e) {client.channels.get(debugChnl).send(`<@107599228900999168> :warning: :x: ***CRITICAL ERROR*** :x: :warning:\n\`\`\`xl\n${e}\n\`\`\``);}
 });
 
 client.login(token);

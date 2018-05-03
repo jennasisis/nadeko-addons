@@ -18,6 +18,6 @@
   },
   "homepage": "https://github.com/jennasisis/nadeko-addons#readme",
   "dependencies": {
-    "discord.js": "github:discordjs/discord.js"
+    "discord.js": "^11.3.2"
   }
 }
