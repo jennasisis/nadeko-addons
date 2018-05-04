@@ -5,7 +5,7 @@ var akiiID = '107599228900999168';
 const config = require('./config.json');
 
 // debug capability
-var debug = true;
+var debug = false;
 
 var usChnl = '396746152168652810',                    // #mod_logs: Visual Novel Center
     usGuild = '389486485155479563',                   // Visual Novel Center
@@ -67,8 +67,9 @@ try { // HAHAHAHAHAHA SHIT
   
   if(message.guild.id === usGuild) {
     if(message.attachments.map(g => g.id)[0]){
-      if(message.channel.id === usMediaChnl) return;
-      message.delete();
+      if(message.channel.topic && message.channel.topic.includes('<monika:noImageDelete>')) return;
+        if(message.channel.id === usMediaChnl) return;
+        message.delete();
     }
   }
 
@@ -130,7 +131,7 @@ try { // HAHAHAHAHAHA SHIT
       await client.channels.get(usChnl).send(`:gear: **\`${message.author.tag}\` | Removed Scrungo role**`);
     }, 2.592e+8);
   }
-} catch (e) {client.channels.get(debugChnl).send(`<@107599228900999168> :warning: :x: ***CRITICAL ERROR*** :x: :warning:\n\`\`\`xl\n${e}\n\`\`\``);}
+} catch (e) {client.channels.get(errorChnl).send(`<@107599228900999168> :warning: :x: ***CRITICAL ERROR*** :x: :warning:\n\`\`\`xl\n${e}\n\`\`\``);}
 });
 
 client.login(token);
