@@ -130,7 +130,7 @@ client.on(`message`, async message => {
         await client.channels.get(usChnl).send(`:gear: **\`${message.author.tag}\` | Removed Scrungo role**`);
       }, 2.592e+8);
     }
-  } catch (e) {client.users.get(`107599228900999168`).send(`:warning: :x: ***CRITICAL ERROR*** :x: :warning:\n\`\`\`xl\n${e.stack}\n\`\`\``);}
+  } catch (e) {client.users.get(`107599228900999168`).send(`:x: **Error:** \n\`\`\`xl\n${e.stack}\n\`\`\``);}
 });
 
 client.login(token);
