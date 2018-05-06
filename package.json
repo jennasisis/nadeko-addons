@@ -5,7 +5,7 @@
   "main": "nadeko-sideload.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node nadeko-sideload.js"
+    "start": "node nadeko-addons.js"
   },
   "repository": {
     "type": "git",
