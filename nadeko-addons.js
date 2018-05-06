@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 const Discord = require(`discord.js`);
 const client = new Discord.Client({disableEveryone: true});
 var akiiID = `107599228900999168`;
@@ -65,10 +63,10 @@ client.on(`ready`, async () => {
   var guild = client.guilds.get(usGuild);
   var scrungo = guild.roles.find(`name`, `Scrungo`);
   await guild.fetchMembers();
-  var scrungoMembers = await guild.roles.get(scrungo.id).members
+  var scrungoMembers = await guild.roles.get(scrungo.id).members;
   await scrungoMembers.forEach(member => {
     member.removeRole(scrungo); 
-    member.user.send(new Discord.RichEmbed().setAuthor(guild.name, guild.iconURL).setTitle('Sorry for the inconvenience, but this bot has just restarted, and as a result, your Scrungo role has been removed. Please reapply it to have access to the server.').setColor('0x7289da'));
+    member.user.send(new Discord.RichEmbed().setAuthor(guild.name, guild.iconURL).setTitle(`Sorry for the inconvenience, but this bot has just restarted, and as a result, your Scrungo role has been removed. Please reapply it to have access to the server.`).setColor(`0x7289da`));
     console.log(`[READY] Removed the Scrungo role from ${member.user.tag}`);
   });
 });
