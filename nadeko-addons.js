@@ -1,137 +1,136 @@
-const Discord = require('discord.js');
-const snek = require('snekfetch');
+const Discord = require(`discord.js`);
 const client = new Discord.Client({disableEveryone: true});
-var akiiID = '107599228900999168';
-const config = require('./config.json');
+var akiiID = `107599228900999168`;
+const config = require(`./config.json`);
 
 // debug capability
-var debug = false;
+var debug = true;
 
-var usChnl = '396746152168652810',                    // #mod_logs: Visual Novel Center
-    usGuild = '389486485155479563',                   // Visual Novel Center
-    usMediaChnl = '436877775224307713',               // #media: Visual Novel Center
-    sMonitChnl = '430472413042704386',                // #type-here
-    token = config.token,                             // Nadeko's token
-    errorChnl = '389524577178353674'                  // #best_staff_2020: VNC
+var usChnl = `396746152168652810`,                    // #mod_logs: Visual Novel Center
+  usGuild = `389486485155479563`,                   // Visual Novel Center
+  usMediaChnl = `436877775224307713`,               // #media: Visual Novel Center
+  sMonitChnl = `430472413042704386`,                // #type-here
+  token = config.token,                             // Nadeko's token
+  errorChnl = `389524577178353674`;                  // #best_staff_2020: VNC
 
-if(debug){
-  usChnl = '332632603737849856';                      // #general: Some bot shit or somethin idk
-  usMediaChnl = '332632603737849856';                 // #general: Some bot shit or somethin idk
-  usGuild = '332632603737849856';                     // Some bot shit or somethin idk
-  sMonitChnl = '436989848658771973';                  // #testing: Some bot shit or somethin idk
+if (debug) {
+  usChnl = `332632603737849856`;                      // #general: Some bot shit or somethin idk
+  usMediaChnl = `332632603737849856`;                 // #general: Some bot shit or somethin idk
+  usGuild = `332632603737849856`;                     // Some bot shit or somethin idk
+  sMonitChnl = `436989848658771973`;                  // #testing: Some bot shit or somethin idk
   token = config.devToken;                            // Debug Bot's token
-  errorChnl = '332632603737849856';                   // #general: SBSOSIDK
+  errorChnl = `332632603737849856`;                   // #general: SBSOSIDK
 }
 
 function clean(text) {
-  if (typeof(text) === "string")
-    return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
+  if (typeof(text) === `string`)
+    return text.replace(/`/g, `\`` + String.fromCharCode(8203)).replace(/@/g, `@` + String.fromCharCode(8203));
   else
-      return text;
+    return text;
 }
 
 async function unScrungo() {
   var chnl = client.channels.get(usChnl);
   var guild = client.guilds.get(usGuild);
-  var scrungo = guild.roles.find('name', 'Scrungo');
-  var club_member = guild.roles.find('name', 'Club Members');
+  var scrungo = guild.roles.find(`name`, `Scrungo`);
+  var club_member = guild.roles.find(`name`, `Club Members`);
 
-  await chnl.send(':gear: **Scrungo prune process begun.** Caching members...');
+  await chnl.send(`:gear: **Scrungo prune process begun.** Caching members...`);
 
   await guild.fetchMembers();
   await chnl.send(`:white_check_mark: **Done caching members**`);
   
-  await chnl.send(':gear: **Checking for Scrungos to prune...**');
-  if(!scrungo) {await chnl.send(':x: No `Scrungo` role detected!'); await exit();}
-  if(!club_member) {await chnl.send(':x: No `Club Members` role detected!'); await exit();}
+  await chnl.send(`:gear: **Checking for Scrungos to prune...**`);
+  if (!scrungo) return await chnl.send(`:x: No \`Scrungo\` role detected!`);
+  if (!club_member) return await chnl.send(`:x: No \`Club Members\` role detected!`);
 
   await guild.members.forEach(async member => {
-    if(member.roles.has(scrungo.id) && member.roles.has(club_member.id)) {
-        await chnl.send(`:warning: __**${member.user.tag}**__ **has the Scrungo role. Removing...**`);
-        await member.removeRole(scrungo, "Scrungo prune");
+    if (member.roles.has(scrungo.id) && member.roles.has(club_member.id)) {
+      await chnl.send(`:warning: __**${member.user.tag}**__ **has the Scrungo role. Removing...**`);
+      await member.removeRole(scrungo, `Scrungo prune`);
     }
   });
 
-  await chnl.send(':white_check_mark: **Done**');
+  await chnl.send(`:white_check_mark: **Done**`);
 }
 
-client.on('ready', async () => {
-  console.log('Nadeko Sideloader Ready');
-  if(debug) console.log('⚠️  DEBUG FUNCTION ENABLED ️️️⚠️');
+client.on(`ready`, async () => {
+  console.log(`Nadeko Sideloader Ready`);
+  if (debug) console.log(`⚠️  DEBUG FUNCTION ENABLED ️️️⚠️`);
 });
 
-client.on('message', async message => {
-try { // HAHAHAHAHAHA SHIT
-  if(message.author.bot) return;
-  const args = message.content.split(" ").slice(1);
+client.on(`message`, async message => {
+  try { // HAHAHAHAHAHA SHIT
+    if (message.author.bot || message.channel.type === `dm`) return;
+    const args = message.content.split(` `).slice(1);
   
-  if(message.guild.id === usGuild) {
-    if(message.attachments.map(g => g.id)[0]){
-      if(message.channel.topic && message.channel.topic.includes('<monika:noImageDelete>')) return;
-        if(message.channel.id === usMediaChnl) return;
+    if (message.guild.id === usGuild) {
+      if (message.attachments.map(g => g.id)[0]) {
+        if (message.channel.topic && message.channel.topic.includes(`<monika:noImageDelete>`)) return;
+        if (message.channel.id === usMediaChnl) return;
         message.delete();
-    }
-  }
-
-  // roles and stuff
-  var scrungoRole = message.guild.roles.find('name', 'Scrungo');
-  var clubRole = message.guild.roles.find('name', 'Club Members');
-
-  // for akii commands only
-  if(message.author.id === akiiID){
-    // eval
-    if(message.content.startsWith("+eval")){
-      try {
-        const code = args.join(" ");
-        let evaled = eval(code);
-  
-        if (typeof evaled !== "string")
-          evaled = require("util").inspect(evaled);
-  
-        message.channel.send(clean(evaled), {code:"xl"}).catch(err => {
-          message.channel.send(':x: Whoops, error. Check logs.');
-          console.error(err);
-          console.log(evaled);
-        })
-      } catch (err) {
-        message.channel.send(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``);
       }
     }
 
-    // sys
-    if(message.content.startsWith(`+sys`)){
-      require('child_process').exec(args.join(" "), (e, out, err) => {
-      if(e || err) {message.channel.send(`Whoops, error.\n\`\`\`bash\n${e | err}\n\`\`\``);}
-      message.channel.send(`\`\`\`bash\n${out}\n\`\`\``);
-    })}
-  }
+    // roles and stuff
+    var scrungoRole = message.guild.roles.find(`name`, `Scrungo`);
+    var clubRole = message.guild.roles.find(`name`, `Club Members`);
 
-  // unScrungo
-  if(message.content.toLowerCase() === "+unscrungo"){
-    if(message.member.permissions.has('ADMINISTRATOR')){
-      message.delete();
-      unScrungo();
+    // for akii commands only
+    if (message.author.id === akiiID) {
+    // eval
+      if (message.content.startsWith(`+eval`)) {
+        try {
+          const code = args.join(` `);
+          let evaled = eval(code);
+  
+          if (typeof evaled !== `string`)
+            evaled = require(`util`).inspect(evaled);
+  
+          message.channel.send(clean(evaled), {code:`xl`}).catch(err => {
+            message.channel.send(`:x: Whoops, error. Check logs.`);
+            console.error(err);
+            console.log(evaled);
+          });
+        } catch (err) {
+          message.channel.send(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``);
+        }
+      }
+
+      // sys
+      if (message.content.startsWith(`+sys`)) {
+        require(`child_process`).exec(args.join(` `), (e, out, err) => {
+          if (e || err) {message.channel.send(`Whoops, error.\n\`\`\`bash\n${e | err}\n\`\`\``);}
+          message.channel.send(`\`\`\`bash\n${out}\n\`\`\``);
+        });}
     }
-  }
 
-  // ping
-  if(message.content === "+sPing") return message.channel.send(`:ping_pong: Nadeko Addons: ${Math.round(client.ping)}ms`);
+    // unScrungo
+    if (message.content.toLowerCase() === `+unscrungo`) {
+      if (message.member.permissions.has(`ADMINISTRATOR`)) {
+        message.delete();
+        unScrungo();
+      }
+    }
 
-  // debug
-  if(message.content === "+debug?") return message.channel.send(`\`\`\`xl\n${debug}\n\`\`\``);
+    // ping
+    if (message.content === `+sPing`) return message.channel.send(`:ping_pong: Nadeko Addons: ${Math.round(client.ping)}ms`);
 
-  // auto scrungo function
-  if(message.channel.id === sMonitChnl){
-    if(message.content !== "Scrungo") return message.delete();
-    message.delete();
-    message.member.addRole(scrungoRole.id, 'Auto-scrungo addition process');
-    client.channels.get(usChnl).send(`:white_check_mark: **\`${message.author.tag}\` | Approved for server entry**`);
-    setTimeout(async () => {
-      await message.member.removeRole(scrungoRole.id, 'Auto-scrungo removal process');
-      await client.channels.get(usChnl).send(`:gear: **\`${message.author.tag}\` | Removed Scrungo role**`);
-    }, 2.592e+8);
-  }
-} catch (e) {client.channels.get(errorChnl).send(`<@107599228900999168> :warning: :x: ***CRITICAL ERROR*** :x: :warning:\n\`\`\`xl\n${e}\n\`\`\``);}
+    // debug
+    if (message.content === `+debug?`) return message.channel.send(`\`\`\`xl\n${debug}\n\`\`\``);
+
+    // auto scrungo function
+    if (message.channel.id === sMonitChnl) {
+      if (message.content !== `Scrungo`) return message.delete();
+      message.delete();
+      message.member.addRole(scrungoRole.id, `Auto-scrungo addition process`);
+      client.channels.get(usChnl).send(`:white_check_mark: **\`${message.author.tag}\` | Approved for server entry**`);
+      setTimeout(async () => {
+        await message.member.removeRole(scrungoRole.id, `Auto-scrungo removal process`);
+        await client.channels.get(usChnl).send(`:gear: **\`${message.author.tag}\` | Removed Scrungo role**`);
+      }, 2.592e+8);
+    }
+  } catch (e) {client.users.get(`107599228900999168`).send(`:warning: :x: ***CRITICAL ERROR*** :x: :warning:\n\`\`\`xl\n${e.stack}\n\`\`\``);}
 });
 
 client.login(token);
