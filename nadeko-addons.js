@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 const Discord = require(`discord.js`);
 const client = new Discord.Client({disableEveryone: true});
 var akiiID = `107599228900999168`;
@@ -6,20 +8,20 @@ const config = require(`./config.json`);
 // debug capability
 var debug = true;
 
-var usChnl = `396746152168652810`,                    // #mod_logs: Visual Novel Center
-  usGuild = `389486485155479563`,                   // Visual Novel Center
-  usMediaChnl = `436877775224307713`,               // #media: Visual Novel Center
-  sMonitChnl = `430472413042704386`,                // #type-here
-  token = config.token,                             // Nadeko's token
-  errorChnl = `389524577178353674`;                  // #best_staff_2020: VNC
+var usChnl = `396746152168652810`,      // #mod_logs: Visual Novel Center
+  usGuild = `389486485155479563`,       // Visual Novel Center
+  usMediaChnl = `436877775224307713`,   // #media: Visual Novel Center
+  sMonitChnl = `430472413042704386`,    // #type-here
+  token = config.token,                 // Nadeko's token
+  errorChnl = `389524577178353674`;     // #best_staff_2020: VNC
 
 if (debug) {
-  usChnl = `332632603737849856`;                      // #general: Some bot shit or somethin idk
-  usMediaChnl = `332632603737849856`;                 // #general: Some bot shit or somethin idk
-  usGuild = `332632603737849856`;                     // Some bot shit or somethin idk
-  sMonitChnl = `436989848658771973`;                  // #testing: Some bot shit or somethin idk
-  token = config.devToken;                            // Debug Bot's token
-  errorChnl = `332632603737849856`;                   // #general: SBSOSIDK
+  usChnl = `332632603737849856`;        // #general: Some bot shit or somethin idk
+  usMediaChnl = `332632603737849856`;   // #general: Some bot shit or somethin idk
+  usGuild = `332632603737849856`;       // Some bot shit or somethin idk
+  sMonitChnl = `436989848658771973`;    // #testing: Some bot shit or somethin idk
+  token = config.devToken;              // Debug Bot's token
+  errorChnl = `332632603737849856`;     // #general: SBSOSIDK
 }
 
 function clean(text) {
@@ -57,6 +59,18 @@ async function unScrungo() {
 client.on(`ready`, async () => {
   console.log(`Nadeko Sideloader Ready`);
   if (debug) console.log(`⚠️  DEBUG FUNCTION ENABLED ️️️⚠️`);
+  
+  client.users.get(`107599228900999168`).send(`**\`[Nadeko Addons]\` |** Bot is online! Starting the Scrungo prune...`); // Akii's ID
+  
+  var guild = client.guilds.get(usGuild);
+  var scrungo = guild.roles.find(`name`, `Scrungo`);
+  await guild.fetchMembers();
+  var scrungoMembers = await guild.roles.get(scrungo.id).members
+  await scrungoMembers.forEach(member => {
+    member.removeRole(scrungo); 
+    member.user.send(new Discord.RichEmbed().setAuthor(guild.name, guild.iconURL).setTitle('Sorry for the inconvenience, but this bot has just restarted, and as a result, your Scrungo role has been removed. Please reapply it to have access to the server.').setColor('0x7289da'));
+    console.log(`[READY] Removed the Scrungo role from ${member.user.tag}`);
+  });
 });
 
 client.on(`message`, async message => {
@@ -110,7 +124,7 @@ client.on(`message`, async message => {
       if (message.member.permissions.has(`ADMINISTRATOR`)) {
         message.delete();
         unScrungo();
-      }
+      } else {message.delete(); message.author.send(`:x: You do not have access to this command!`);}
     }
 
     // ping
