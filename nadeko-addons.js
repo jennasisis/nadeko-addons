@@ -21,7 +21,7 @@ if (debug) {
   token = config.devToken;              // Debug Bot's token
   errorChnl = `332632603737849856`;     // #general: SBSOSIDK
 }
-// to trigger travis.ci
+
 function clean(text) {
   if (typeof(text) === `string`)
     return text.replace(/`/g, `\`` + String.fromCharCode(8203)).replace(/@/g, `@` + String.fromCharCode(8203));
