@@ -1,5 +1,7 @@
 langauge: node_js
 node_js: lts/*
+sudo: required
 install: 
-- npm i
+  - npm i -g npm
+  - npm i
 script: npm start
