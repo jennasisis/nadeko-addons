@@ -61,10 +61,10 @@ client.on(`ready`, async () => {
 
 client.on(`message`, async message => {
   try { // HAHAHAHAHAHA SHIT
-    if (message.author.bot || message.channel.type === `dm`) return;
+    if (message.author.bot) return;
     const args = message.content.split(` `).slice(1);
   
-    if (message.guild.id === usGuild) {
+    if (message.channel.type !== `dm` && message.guild.id === usGuild) {
       if (message.attachments.map(g => g.id)[0]) {
         if (message.channel.topic && message.channel.topic.includes(`<monika:noImageDelete>`)) return;
         if (message.channel.id === usMediaChnl) return;
