@@ -84,6 +84,14 @@ client.on(`message`, async message => {
       }
     }
 
+    if (message.content.toLowerCase() === `tape is gay`) {
+      message.channel.startTyping();
+      setTimeout(() => {
+        message.channel.send(`CAN CONFIRM, TAPE IS GAY.`);
+        message.channel.stopTyping(true);
+      }, 3000);
+    }
+
     // roles and stuff
     var scrungoRole = message.guild.roles.find(`name`, `Scrungo`);
     var clubRole = message.guild.roles.find(`name`, `Club Members`);
