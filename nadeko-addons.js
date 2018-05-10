@@ -4,7 +4,7 @@ var akiiID = `107599228900999168`;
 const config = require(`./config.json`);
 
 // debug capability
-var debug = true;
+var debug = false;
 
 var usChnl = `396746152168652810`,      // #mod_logs: Visual Novel Center
   usGuild = `389486485155479563`,       // Visual Novel Center
