@@ -4,7 +4,7 @@ var akiiID = `107599228900999168`;
 const config = require(`./config.json`);
 
 // debug capability
-var debug = false;
+var debug = true;
 
 var usChnl = `396746152168652810`,      // #mod_logs: Visual Novel Center
   usGuild = `389486485155479563`,       // Visual Novel Center
@@ -28,6 +28,11 @@ function clean(text) {
   else
     return text;
 }
+
+String.prototype.replaceAll = function(search, replacement) {
+  var target = this;
+  return target.replace(new RegExp(search, `g`), replacement);
+};
 
 async function unScrungo() {
   var chnl = client.channels.get(usChnl);
@@ -55,19 +60,20 @@ async function unScrungo() {
 }
 
 client.on(`ready`, async () => {
-  console.log(`Nadeko Sideloader Ready`);
+  console.log(`Nadeko Addons Ready`);
   if (debug) console.log(`⚠️  DEBUG FUNCTION ENABLED ️️️⚠️`);
   
-  client.users.get(`107599228900999168`).send(`**\`[Nadeko Addons]\` |** Bot is online! Starting the Scrungo prune...`); // Akii's ID
+  //client.users.get(`107599228900999168`).send(`**\`[Nadeko Addons]\` |** Bot is online! Starting the Scrungo prune...`); // Akii's ID
   
   var guild = client.guilds.get(usGuild);
   var scrungo = guild.roles.find(`name`, `Scrungo`);
   await guild.fetchMembers();
   var scrungoMembers = await guild.roles.get(scrungo.id).members;
-  await scrungoMembers.forEach(member => {
-    member.removeRole(scrungo);
-    member.user.send(new Discord.RichEmbed().setAuthor(guild.name, guild.iconURL).setTitle(`Sorry for the inconvenience, but this bot has just restarted, and as a result, your Scrungo role has been removed. Please reapply it to have access to the server.`).setColor(`0x7289da`));
+  await scrungoMembers.forEach(async member => {
+    await member.removeRole(scrungo);
+    await member.user.send(new Discord.RichEmbed().setAuthor(guild.name, guild.iconURL).setTitle(`Sorry for the inconvenience, but this bot has just restarted, and as a result, your Scrungo role has been removed. Please reapply it to have access to the server.`).setColor(`0x7289da`));
     console.log(`[READY] Removed the Scrungo role from ${member.user.tag}`);
+    await client.users.get(`107599228900999168`).send(`**\`[Nadeko Addons]\` |** *\`[READY]\`* - Removed Scrungo role from ${member.user.tag}`);
   });
 });
 
@@ -83,18 +89,6 @@ client.on(`message`, async message => {
         message.delete();
       }
     }
-
-    if (message.content.toLowerCase() === `tape is gay`) {
-      message.channel.startTyping();
-      setTimeout(() => {
-        message.channel.send(`CAN CONFIRM, TAPE IS GAY.`);
-        message.channel.stopTyping(true);
-      }, 3000);
-    }
-
-    // roles and stuff
-    var scrungoRole = message.guild.roles.find(`name`, `Scrungo`);
-    var clubRole = message.guild.roles.find(`name`, `Club Members`);
 
     // for akii commands only
     if (message.author.id === akiiID) {
@@ -134,13 +128,17 @@ client.on(`message`, async message => {
     }
 
     // ping
-    if (message.content === `+sPing`) return message.channel.send(`:ping_pong: Nadeko Addons: ${Math.round(client.ping)}ms`);
+    if (message.content === `+aPing`) return message.channel.send(`:ping_pong: Nadeko Addons: ${Math.round(client.ping)}ms`);
 
     // debug
     if (message.content === `+debug?`) return message.channel.send(`\`\`\`xl\n${debug}\n\`\`\``);
 
     // auto scrungo function
     if (message.channel.id === sMonitChnl) {
+      // roles and stuff
+      var scrungoRole = message.guild.roles.find(`name`, `Scrungo`);
+      var clubRole = message.guild.roles.find(`name`, `Club Members`);
+
       if (message.content !== `Scrungo`) return message.delete();
       message.delete();
       message.member.addRole(scrungoRole.id, `Auto-scrungo addition process`);
