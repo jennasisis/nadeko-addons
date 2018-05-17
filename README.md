@@ -1,4 +1,6 @@
 # Nadeko Addons
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/jennasisis/nadeko-addons.svg)](https://greenkeeper.io/)
 Just some addons to the version of Nadeko I self host /shrug
 
 here's some badges or whatever:
